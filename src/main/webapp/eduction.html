@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+
+function getInfo(){
+	document.getElementById("result").innerHTML = "";
+	$.get("/eduction/msg", {message: document.getElementById("msg").value}, function(data, status){
+		if(status=="success"){
+			for(var i=0;i<data.length;i++){
+				var elem = document.createElement('li');
+			    elem.innerHTML = data[i];
+			    document.getElementById('result').append(elem)
+			}
+		}else{
+			alert("error!!!!");
+		}
+	}).fail(function(){
+		alert("fail!!!!");
+	}).always(function(){
+		flag = false;
+	})
+}
+</script>
+</head>
+<body>
+<label>Message</label><br/>
+<textarea id="msg" rows="20" cols="100">
+</textarea>
+<button onclick="getInfo()">확인</button>
+<p>결과</p>
+<ul id="result">
+</ul>
+<br/>
+<br/>
+<br/>
+<p>ex)</p>
+<span>http://wwwa.com https://www 이것은 테스트 http://192.168.1.235/fgdfgdfg?fsdfsdf=sdfsdfwIz6qCu25O0 www.com HTTPS://www.aaa.or.sdf www.naver www.테스트 http://테스트  http://localhost:8080 </span>
+</body>
+</html>

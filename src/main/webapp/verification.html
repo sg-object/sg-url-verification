@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<script type="text/javascript">
+var flag = false;
+
+function getInfo(){
+	if(flag){
+		alert("처리중");
+		return;
+	}
+	flag = true;
+	var url = document.getElementById("protocol").value + document.getElementById("url").value;
+	$.get("/verification/info", {url: url}, function(data, status){
+		if(status=="success"){
+			if(data.unknown){
+				document.getElementById("code").innerHTML="";
+                document.getElementById("type").innerHTML="";
+                document.getElementById("length").innerHTML="";
+				alert("해당 url로 정보를 가져올수 없습니다.")
+			}else{
+				document.getElementById("code").innerHTML=data.responseCode;
+				document.getElementById("type").innerHTML=data.contentType;
+				document.getElementById("length").innerHTML=data.contentLength + " byte";
+				
+				if(data.screenYn){
+					flag = false;
+					location.href = "http://localhost:8080/screen?url=" + url
+				}
+			}
+		}else{
+			alert("error!!!!");
+		}
+	}).fail(function(){
+		alert("fail!!!!");
+	}).always(function(){
+		flag = false;
+	})
+}
+</script>
+</head>
+<body>
+<label>url : </label>
+<select id="protocol">
+<option value="http://">http://</option>
+<option value="https://">https://</option>
+</select>
+<input id="url" type="text" style="width: 50%"/>
+<button onclick="getInfo()">확인</button>
+<p>결과</p>
+<label>Response Code : </label>
+<span id="code"></span><br/>
+<label>Content Type : </label>
+<span id="type"></span><br/>
+<label>Content Length : </label>
+<span id="length"></span><br/>
+<br/>
+<br/>
+<br/>
+<p>ex)</p>
+<label>알집 : </label>
+<span>http://advert.estsoft.com/?event=200803276378987</span><br/><br/>
+<label>이미지 : </label>
+<span>https://post-phinf.pstatic.net/MjAxNzEyMTFfMTEy/MDAxNTEyOTcxMDI1ODA4.cjd5OumAU0G_fRJuH7TEP7g-MDRUdXMChDwqg8dEoTog.jrafDJX1mLUuU4NQvv3Fbyz4ZN5p36IHARh0ipKqdn8g.JPEG/michel_buble_christmas.jpg?type=w1200</span>
+</body>
+</html>
